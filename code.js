@@ -6,7 +6,6 @@ canvas.height = innerHeight / 2;
 
 class Button {
   constructor(position) {
-    
     this.position = {
       x: position.x,
       y: position.y
@@ -17,7 +16,7 @@ class Button {
       y: 2
     }
 
-    this.velocity = 10;
+    this.velocity = 5;
     this.radius = 15;
   }
 
@@ -33,9 +32,30 @@ class Button {
     c.fill();
     c.closePath();
   }
+  
+  collision() {
+    if (circleCollidesWithBorder(
+      { ...this, direction: { x: this.direction.x } }
+    )) this.direction.x *= -1;
+
+    if (circleCollidesWithBorder(
+      { ...this, direction: { y: this.direction.y } }
+    )) this.direction.y *= -1;
+  }
+
+  move() {
+    if (this.velocity > 0) {
+      this.position.x += this.direction.x * this.velocity;
+      this.position.y += this.direction.y * this.velocity;
+
+      this.velocity -= this.velocity > 5 ? 0.2 : 0.02;
+    }
+  }
 
   update() {
     this.draw();
+    this.collision();
+    this.move();
   }
 }
 
@@ -45,6 +65,18 @@ const button = new Button(
     y: 100
   }
 );
+
+function circleCollidesWithBorder(circle) {
+  const nextMoveX = circle.direction.x * circle.velocity;
+  const nextMoveY = circle.direction.y * circle.velocity;
+
+  return (
+    circle.position.x - circle.radius + nextMoveX <= 0 ||
+    circle.position.x + circle.radius + nextMoveX >= canvas.width ||
+    circle.position.y - circle.radius + nextMoveY <= 0 ||
+    circle.position.y + circle.radius + nextMoveY >= canvas.height
+  );
+}
 
 function run() {
   requestAnimationFrame(run);
