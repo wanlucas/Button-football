@@ -16,7 +16,7 @@ class Button {
       y: 2
     }
 
-    this.velocity = 5;
+    this.velocity = 10;
     this.radius = 15;
   }
 
@@ -36,11 +36,23 @@ class Button {
   collision() {
     if (circleCollidesWithBorder(
       { ...this, direction: { x: this.direction.x } }
-    )) this.direction.x *= -1;
+    )) {
+      if(this.direction.x > 0) 
+        this.position.x = canvas.width - this.radius;
+      else this.position.x = 0 + this.radius;
+      
+      this.direction.x *= -1;
+    };
 
     if (circleCollidesWithBorder(
       { ...this, direction: { y: this.direction.y } }
-    )) this.direction.y *= -1;
+    )) {
+      if(this.direction.y > 0) 
+        this.position.y = canvas.height - this.radius;
+      else this.position.y = 0 + this.radius;
+
+      this.direction.y *= -1
+    };
   }
 
   move() {
@@ -62,7 +74,7 @@ class Button {
 const button = new Button(
   position = {
     x: 100,
-    y: 100
+    y: 250
   }
 );
 
