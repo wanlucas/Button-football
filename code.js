@@ -1,9 +1,6 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
-canvas.width = innerWidth / 2;
-canvas.height = innerHeight / 2;
-
 class Button {
   constructor(position) {
     this.position = {
@@ -97,6 +94,17 @@ function run() {
   button.update();
 }
 
+function updateCanvasSize() {
+  canvas.width = innerWidth / 1.5;
+  canvas.height = innerHeight / 1.5;
+}
+
 window.addEventListener('load', () => {
+  updateCanvasSize();
   run();
-})
+});
+
+window.addEventListener('resize', () => 
+  updateCanvasSize()
+);
+
