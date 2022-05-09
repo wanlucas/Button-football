@@ -1,6 +1,12 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
+const controls = {
+  clicking: false,
+  mouseX: 0,
+  mouseY: 0
+}
+
 class Button {
   constructor(position) {
     this.position = {
@@ -32,7 +38,7 @@ class Button {
 
   collision() {
     if (circleCollidesWithBorder(
-      { ...this, direction: { x: this.direction.x } }
+      { ...this, direction : { x: this.direction.x } }
     )) {
       if (this.direction.x > 0)
         this.position.x = canvas.width - this.radius;
@@ -150,8 +156,20 @@ function updateCanvasSize() {
   canvas.height = innerHeight / 1.5;
 }
 
+function createInputListeners() {
+  canvas.addEventListener('mousedown', () => controls.clicking = true);
+  canvas.addEventListener('mouseup', () => controls.clicking = false);
+
+  canvas.addEventListener('mousemove', ({ offsetX, offsetY }) => {
+    controls.mouseX = offsetX;
+    controls.mouseY = offsetY;
+  });
+}
+
+
 window.addEventListener('load', () => {
   updateCanvasSize();
+  createInputListeners();
   createTeams();
   run();
 });
