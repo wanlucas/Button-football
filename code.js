@@ -29,22 +29,22 @@ class Button {
     c.fill();
     c.closePath();
   }
-  
+
   collision() {
     if (circleCollidesWithBorder(
       { ...this, direction: { x: this.direction.x } }
     )) {
-      if(this.direction.x > 0) 
+      if (this.direction.x > 0)
         this.position.x = canvas.width - this.radius;
       else this.position.x = 0 + this.radius;
-      
+
       this.direction.x *= -1;
     };
 
     if (circleCollidesWithBorder(
       { ...this, direction: { y: this.direction.y } }
     )) {
-      if(this.direction.y > 0) 
+      if (this.direction.y > 0)
         this.position.y = canvas.height - this.radius;
       else this.position.y = 0 + this.radius;
 
@@ -55,7 +55,7 @@ class Button {
   move() {
     if (this.velocity > 0) {
       this.position.x += this.direction.x * this.velocity;
-      this.position.y += this.direction.y * this.velocity; 
+      this.position.y += this.direction.y * this.velocity;
 
       this.velocity -= this.velocity > 5 ? 0.1 : 0.02;
     }
@@ -70,23 +70,27 @@ class Button {
 
 const teamOne = {
   players: [],
+  flank: 1,
   formation: [
-    [' ',' ',' ',' '], 
-    [' ',' ',' ',' '], 
-    [' ','o','o',' '], 
-    [' ',' ',' ',' '], 
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', 'o', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
   ]
 };
 
 const teamTwo = {
   players: [],
+  flank: 2,
   formation: [
-    [' ',' ',' ',' '], 
-    [' ',' ',' ',' '], 
-    [' ','o','o',' '], 
-    [' ',' ',' ',' '], 
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
   ]
-}; 
+};
 
 function circleCollidesWithBorder(circle) {
   const nextMoveX = circle.direction.x * circle.velocity;
@@ -97,6 +101,39 @@ function circleCollidesWithBorder(circle) {
     circle.position.x + circle.radius + nextMoveX >= canvas.width ||
     circle.position.y - circle.radius + nextMoveY <= 0 ||
     circle.position.y + circle.radius + nextMoveY >= canvas.height
+  );
+}
+
+function createTeams() {
+  for (const team of [teamOne, teamTwo]) {
+    const hrTileSize = (canvas.width / team.formation[0].length) / 2;
+    const vrTileSize = canvas.height / team.formation.length;
+
+    team.formation.forEach((row, y) => {
+      row.forEach((col, x) => {
+        if (col === 'o') createNewButton(
+          team,
+          position = {
+            x: x * hrTileSize + hrTileSize / 2,
+            y: y * vrTileSize + vrTileSize / 2
+          }
+        );
+      });
+    });
+  }
+}
+
+function createNewButton(team, position) {
+  if(team.flank === 2)
+    position.x += canvas.width / 2;
+
+  team.players.push(
+    new Button(
+      position = {
+        x: position.x,
+        y: position.y
+      }
+    )
   );
 }
 
@@ -119,6 +156,6 @@ window.addEventListener('load', () => {
   run();
 });
 
-window.addEventListener('resize', () => 
+window.addEventListener('resize', () =>
   updateCanvasSize()
 );
