@@ -9,7 +9,7 @@ class Button {
     }
 
     this.direction = {
-      x: 1,
+      x: 3,
       y: 2
     }
 
@@ -55,9 +55,9 @@ class Button {
   move() {
     if (this.velocity > 0) {
       this.position.x += this.direction.x * this.velocity;
-      this.position.y += this.direction.y * this.velocity;
+      this.position.y += this.direction.y * this.velocity; 
 
-      this.velocity -= this.velocity > 5 ? 0.2 : 0.02;
+      this.velocity -= this.velocity > 5 ? 0.1 : 0.02;
     }
   }
 
@@ -107,4 +107,3 @@ window.addEventListener('load', () => {
 window.addEventListener('resize', () => 
   updateCanvasSize()
 );
-
