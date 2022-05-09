@@ -104,8 +104,8 @@ function run() {
   requestAnimationFrame(run);
   c.clearRect(0, 0, canvas.width, canvas.height);
 
-  teamOne.forEach((button) => button.update());
-  teamTwo.forEach((button) => button.update());
+  teamOne.players.forEach((button) => button.update());
+  teamTwo.players.forEach((button) => button.update());
 }
 
 function updateCanvasSize() {
