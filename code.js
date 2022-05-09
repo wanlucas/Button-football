@@ -9,11 +9,11 @@ class Button {
     }
 
     this.direction = {
-      x: 3,
-      y: 2
+      x: 0,
+      y: 0
     }
 
-    this.velocity = 10;
+    this.velocity = 0;
     this.radius = 15;
   }
 
@@ -68,12 +68,25 @@ class Button {
   }
 }
 
-const button = new Button(
-  position = {
-    x: 100,
-    y: 250
-  }
-);
+const teamOne = {
+  players: [],
+  formation: [
+    [' ',' ',' ',' '], 
+    [' ',' ',' ',' '], 
+    [' ','o','o',' '], 
+    [' ',' ',' ',' '], 
+  ]
+};
+
+const teamTwo = {
+  players: [],
+  formation: [
+    [' ',' ',' ',' '], 
+    [' ',' ',' ',' '], 
+    [' ','o','o',' '], 
+    [' ',' ',' ',' '], 
+  ]
+}; 
 
 function circleCollidesWithBorder(circle) {
   const nextMoveX = circle.direction.x * circle.velocity;
@@ -91,7 +104,8 @@ function run() {
   requestAnimationFrame(run);
   c.clearRect(0, 0, canvas.width, canvas.height);
 
-  button.update();
+  teamOne.forEach((button) => button.update());
+  teamTwo.forEach((button) => button.update());
 }
 
 function updateCanvasSize() {
@@ -101,6 +115,7 @@ function updateCanvasSize() {
 
 window.addEventListener('load', () => {
   updateCanvasSize();
+  createTeams();
   run();
 });
 
