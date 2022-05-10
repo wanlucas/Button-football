@@ -13,13 +13,13 @@ class Button {
       x: position.x,
       y: position.y
     }
-
+    
     this.direction = {
       x: 0,
       y: 0
     }
 
-    this.velocity = 0;
+    this.velocity = 1;
     this.radius = 15;
   }
 
@@ -35,12 +35,12 @@ class Button {
     c.fill();
     c.closePath();
   }
-
+  
   collision() {
     if (circleCollidesWithBorder(
-      { ...this, direction : { x: this.direction.x } }
-    )) {
-      if (this.direction.x > 0)
+      { ...this, direction: { x: this.direction.x } }
+      )) {
+        if (this.direction.x > 0)
         this.position.x = canvas.width - this.radius;
       else this.position.x = 0 + this.radius;
 
@@ -49,12 +49,12 @@ class Button {
 
     if (circleCollidesWithBorder(
       { ...this, direction: { y: this.direction.y } }
-    )) {
+      )) {
       if (this.direction.y > 0)
         this.position.y = canvas.height - this.radius;
       else this.position.y = 0 + this.radius;
 
-      this.direction.y *= -1
+      this.direction.y *= -1;
     };
   }
 
@@ -63,7 +63,7 @@ class Button {
       this.position.x += this.direction.x * this.velocity;
       this.position.y += this.direction.y * this.velocity;
 
-      this.velocity -= this.velocity > 5 ? 0.1 : 0.02;
+      this.velocity -= 0.003;
     }
   }
 
@@ -71,6 +71,20 @@ class Button {
     this.draw();
     this.collision();
     this.move();
+  }
+}
+
+class Kicker {
+  constructor(target) {
+    this.target = target;
+  }
+
+  kick() {
+    const vx = controls.mouseX - this.target.position.x;
+    const vy = controls.mouseY - this.target.position.y;
+
+    this.target.direction.x = -vx;
+    this.target.direction.y = -vy;
   }
 }
 
@@ -97,6 +111,8 @@ const teamTwo = {
     [' ', ' ', ' ', ' '],
   ]
 };
+
+let kicker;
 
 function circleCollidesWithBorder(circle) {
   const nextMoveX = circle.direction.x * circle.velocity;
@@ -130,7 +146,7 @@ function createTeams() {
 }
 
 function createNewButton(team, position) {
-  if(team.flank === 2)
+  if (team.flank === 2)
     position.x += canvas.width / 2;
 
   team.players.push(
@@ -157,7 +173,11 @@ function updateCanvasSize() {
 }
 
 function createInputListeners() {
-  canvas.addEventListener('mousedown', () => controls.clicking = true);
+  canvas.addEventListener('mousedown', () => {
+    controls.clicking = true;
+    kicker.target.velocity = 1;
+    kicker.kick();
+  });
   canvas.addEventListener('mouseup', () => controls.clicking = false);
 
   canvas.addEventListener('mousemove', ({ offsetX, offsetY }) => {
@@ -166,11 +186,11 @@ function createInputListeners() {
   });
 }
 
-
 window.addEventListener('load', () => {
   updateCanvasSize();
   createInputListeners();
   createTeams();
+  kicker = new Kicker(teamOne.players[0]);
   run();
 });
 
