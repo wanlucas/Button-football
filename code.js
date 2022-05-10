@@ -106,7 +106,7 @@ const teamTwo = {
   formation: [
     [' ', ' ', ' ', ' '],
     [' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' '],
+    ['o', ' ', ' ', ' '],
     [' ', ' ', ' ', ' '],
     [' ', ' ', ' ', ' '],
   ]
@@ -124,6 +124,14 @@ function circleCollidesWithBorder(circle) {
     circle.position.y - circle.radius + nextMoveY <= 0 ||
     circle.position.y + circle.radius + nextMoveY >= canvas.height
   );
+}
+
+function circleCollidesWithCircle(circle, secondCircle) {
+  const hDistance = circle.position.x - secondCircle.position.x;
+  const vDistance = circle.position.y - secondCircle.position.y;
+  const padding = circle.radius + secondCircle.radius;
+
+  return Math.hypot(hDistance, vDistance) <= padding;
 }
 
 function createTeams() {
@@ -163,7 +171,25 @@ function run() {
   requestAnimationFrame(run);
   c.clearRect(0, 0, canvas.width, canvas.height);
 
-  teamOne.players.forEach((button) => button.update());
+  teamOne.players.forEach((button) => {
+    button.update();
+
+    teamTwo.players.forEach((secondButton) => {
+      if(circleCollidesWithCircle(button, secondButton)) {
+        const vx = button.position.x - secondButton.position.x;
+        const vy = button.position.y - secondButton.position.y;
+
+        button.direction.x = vx;
+        button.direction.y = vy;
+
+        secondButton.direction.x = -vx;
+        secondButton.direction.y = -vy;
+        secondButton.velocity = button.velocity;
+      }; 
+    });
+
+  });
+
   teamTwo.players.forEach((button) => button.update());
 }
 
@@ -175,9 +201,10 @@ function updateCanvasSize() {
 function createInputListeners() {
   canvas.addEventListener('mousedown', () => {
     controls.clicking = true;
-    kicker.target.velocity = 1;
+    kicker.target.velocity = 0.4;
     kicker.kick();
   });
+  
   canvas.addEventListener('mouseup', () => controls.clicking = false);
 
   canvas.addEventListener('mousemove', ({ offsetX, offsetY }) => {
