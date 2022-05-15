@@ -46,7 +46,7 @@ class Button {
       this.position.x += this.direction.x * this.velocity;
       this.position.y += this.direction.y * this.velocity;
 
-      this.velocity -= 0.003;
+      this.velocity -= frictionCalculator(this);
     }
     else this.velocity = 0;
   }
@@ -102,7 +102,7 @@ class Ball {
       this.position.x += this.direction.x * this.velocity;
       this.position.y += this.direction.y * this.velocity;
       
-      this.velocity -= 0.003;
+      this.velocity -= frictionCalculator(this);
     }
     else this.velocity = 0;
   }
@@ -199,6 +199,11 @@ function goal() {
   createTeams();
   ball = new Ball();
   kicker = new Kicker(teamOne.players[0]);
+}
+
+function frictionCalculator(movingObject) {
+  if(movingObject.velocity > 2) return (0.5 * movingObject.mass);
+  return 0.1 * movingObject.mass;
 }
 
 function circleCollidesWithBorder(circle) {
