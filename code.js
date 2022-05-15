@@ -240,9 +240,44 @@ function createNewButton(team, position) {
   );
 }
 
+function drawField() {
+  c.beginPath();
+
+  c.strokeStyle = 'white';
+  c.fillStyle = 'white';
+  c.moveTo(canvas.width / 2, 0);
+  c.lineTo(canvas.width / 2, canvas.height);
+
+  c.moveTo(0, (canvas.height / 2) - 140 );
+  c.lineTo(140, (canvas.height / 2) - 140 );
+  c.lineTo(140, (canvas.height / 2) + 140 );
+  c.lineTo(0, (canvas.height / 2) + 140 );
+
+  c.moveTo(canvas.width, (canvas.height / 2) - 140 );
+  c.lineTo(canvas.width - 140, (canvas.height / 2) - 140 );
+  c.lineTo(canvas.width - 140, (canvas.height / 2) + 140 );
+  c.lineTo(canvas.width, (canvas.height / 2) + 140 );
+
+  c.moveTo(canvas.width / 2 + 180, canvas.height / 2);
+  c.arc(canvas.width / 2, canvas.height / 2, 180, 0, Math.PI * 2);
+  c.stroke();
+
+  c.closePath();
+
+  c.beginPath();
+
+  c.moveTo(canvas.width / 2 + 10, canvas.height / 2);
+  c.arc(canvas.width / 2, canvas.height / 2, 4, 0, Math.PI * 2);
+  c.fill();
+
+  c.closePath();     
+}
+
 function run() {
   requestAnimationFrame(run);
   c.clearRect(0, 0, canvas.width, canvas.height);
+
+  drawField();
   
   ball.update();
 
