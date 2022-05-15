@@ -204,23 +204,11 @@ function circleCollidesWithBorder(circle) {
 function borderCollision(circle) {
   if (circleCollidesWithBorder(
     { ...circle, direction: { x: circle.direction.x } }
-    )) {
-      if (circle.direction.x > 0)
-      circle.position.x = canvas.width - circle.radius;
-    else circle.position.x = 0 + circle.radius;
-
-    circle.direction.x *= -1;
-  };
+    )) circle.direction.x *= -1;
 
   if (circleCollidesWithBorder(
     { ...circle, direction: { y: circle.direction.y } }
-    )) {
-    if (circle.direction.y > 0)
-      circle.position.y = canvas.height - circle.radius;
-    else circle.position.y = 0 + circle.radius;
-
-    circle.direction.y *= -1;
-  };
+    )) circle.direction.y *= -1;
 }
 
 function circleCollidesWithCircle(circle, secondCircle) {
@@ -285,10 +273,9 @@ function createNewButton(team, position) {
 }
 
 function drawField() {
-  const  w = canvas.width, h = canvas.height;
+  const w = canvas.width, h = canvas.height;
 
   c.beginPath();
-
   c.lineWidth = 1;
   c.setLineDash([]);
   c.strokeStyle = 'white';
@@ -317,22 +304,17 @@ function drawField() {
   c.closePath();
 
   c.beginPath();
-
   c.arc(
     w / 2 , h / 2 ,
     (h * 0.8) / 2 , 0 ,
     Math.PI * 2
   );
-
   c.stroke();
-
   c.closePath();
 
   c.beginPath();
-
   c.arc(w / 2, h / 2, 4, 0, Math.PI * 2);
   c.fill();
-
   c.closePath();     
 }
 
