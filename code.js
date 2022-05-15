@@ -20,7 +20,7 @@ class Button {
     }
 
     this.velocity = 1;
-    this.radius = 15;
+    this.radius = 25;
   }
 
   draw() {
@@ -143,8 +143,15 @@ function elasticCollisionBetweenCircles(circle1, circle2) {
 
   circle2.direction.x = -vx;
   circle2.direction.y = -vy;
-  
-  circle2.velocity = circle1.velocity;
+
+  if(circle1.velocity > circle2.velocity) {
+    circle1.velocity *= 0.9;
+    circle2.velocity = circle1.velocity;
+  }
+  else {
+    circle2.velocity *= 0.9;
+    circle1.velocity = circle2.velocity;
+  };
 }
 
 function createTeams() {
@@ -163,7 +170,7 @@ function createTeams() {
         );
       });
     });
-  }
+  };
 }
 
 function createNewButton(team, position) {
