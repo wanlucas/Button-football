@@ -167,6 +167,7 @@ function borderCollision(circle) {
       circle.position.x = canvas.width - circle.radius;
     else circle.position.x = 0 + circle.radius;
 
+    
     circle.direction.x *= -1;
   };
 
@@ -241,33 +242,50 @@ function createNewButton(team, position) {
 }
 
 function drawField() {
+  const  w = canvas.width, h = canvas.height;
+
   c.beginPath();
 
   c.strokeStyle = 'white';
   c.fillStyle = 'white';
-  c.moveTo(canvas.width / 2, 0);
-  c.lineTo(canvas.width / 2, canvas.height);
 
-  c.moveTo(0, (canvas.height / 2) - 140 );
-  c.lineTo(140, (canvas.height / 2) - 140 );
-  c.lineTo(140, (canvas.height / 2) + 140 );
-  c.lineTo(0, (canvas.height / 2) + 140 );
+  c.moveTo(w / 2, 0);
+  c.lineTo(w / 2, h);
 
-  c.moveTo(canvas.width, (canvas.height / 2) - 140 );
-  c.lineTo(canvas.width - 140, (canvas.height / 2) - 140 );
-  c.lineTo(canvas.width - 140, (canvas.height / 2) + 140 );
-  c.lineTo(canvas.width, (canvas.height / 2) + 140 );
+  c.moveTo(0 , h / 2 - h / 3 );
+  c.lineTo(h / 3 , h / 2 - h / 3 );
+  c.lineTo(h / 3 , h / 2 + h / 3 );
+  c.lineTo(0 , h / 2 + h / 3);
 
-  c.moveTo(canvas.width / 2 + 180, canvas.height / 2);
-  c.arc(canvas.width / 2, canvas.height / 2, 180, 0, Math.PI * 2);
+  c.moveTo(1, h / 2 - h / 6);
+  c.lineTo(1, h / 2 + h / 6);
+
+  c.moveTo(w , h / 2 + h / 3 );
+  c.lineTo(w - h / 3 , h / 2 + h / 3 );
+  c.lineTo(w - h / 3 , h / 2 - h / 3 );
+  c.lineTo(w , h/ 2 - h / 3);
+
+  c.moveTo(w - 1, h / 2 - h / 6);
+  c.lineTo(w - 1, h / 2 + h / 6);
+
+  c.stroke();
+  c.closePath();
+
+  c.beginPath();
+
+  c.arc(
+    w / 2 , h / 2 ,
+    (h * 0.8) / 2 , 0 ,
+    Math.PI * 2
+  );
+
   c.stroke();
 
   c.closePath();
 
   c.beginPath();
 
-  c.moveTo(canvas.width / 2 + 10, canvas.height / 2);
-  c.arc(canvas.width / 2, canvas.height / 2, 4, 0, Math.PI * 2);
+  c.arc(w / 2, h / 2, 4, 0, Math.PI * 2);
   c.fill();
 
   c.closePath();     
