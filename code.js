@@ -138,9 +138,7 @@ function circleCollidesWithCircle(circle, secondCircle) {
 function elasticCollisionBetweenCircles(circle1, circle2) {
   const vx = circle1.position.x - circle2.position.x;
   const vy = circle1.position.y - circle2.position.y;
-
-  circle1.mass = 0.3
-
+  
   circle1.direction.x = vx;
   circle1.direction.y = vy;
 
