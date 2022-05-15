@@ -117,32 +117,38 @@ class Ball {
 class Kicker {
   constructor(target) {
     this.target = target;
+    this.spacing = 0;
   }
 
   kick() {
     const vx = controls.mouseX - this.target.position.x;
     const vy = controls.mouseY - this.target.position.y;
-
+    
     this.target.direction.x = -vx;
     this.target.direction.y = -vy;
   }
-
+  
   draw() {
     if(ball.velocity || this.target.velocity) return;
-
-    c.beginPath();
-    c.setLineDash([5, 5]);
-    c.lineWidth = 2;
     
+    c.beginPath();
     c.moveTo(controls.mouseX, controls.mouseY);
     c.lineTo(this.target.position.x, this.target.position.y);
-  
+    c.setLineDash([ 2 + this.spacing, 10]);
+    c.lineWidth = 2;
     c.stroke();
+    c.closePath();
+
+    c.beginPath();
+    c.arc(controls.mouseX, controls.mouseY, 5, 0, Math.PI * 2);
+    c.setLineDash([]);
+    c.fill();
     c.closePath();
   }
 
   update() {
     this.draw();
+    this.spacing < 3 ? this.spacing += 0.05 : this.spacing = 0;
   }
 }
 
