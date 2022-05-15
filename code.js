@@ -134,6 +134,19 @@ function circleCollidesWithCircle(circle, secondCircle) {
   return Math.hypot(hDistance, vDistance) <= padding;
 }
 
+function elasticCollisionBetweenCircles(circle1, circle2) {
+  const vx = circle1.position.x - circle2.position.x;
+  const vy = circle1.position.y - circle2.position.y;
+
+  circle1.direction.x = vx;
+  circle1.direction.y = vy;
+
+  circle2.direction.x = -vx;
+  circle2.direction.y = -vy;
+  
+  circle2.velocity = circle1.velocity;
+}
+
 function createTeams() {
   for (const team of [teamOne, teamTwo]) {
     const hrTileSize = (canvas.width / team.formation[0].length) / 2;
@@ -175,19 +188,9 @@ function run() {
     button.update();
 
     teamTwo.players.forEach((secondButton) => {
-      if(circleCollidesWithCircle(button, secondButton)) {
-        const vx = button.position.x - secondButton.position.x;
-        const vy = button.position.y - secondButton.position.y;
-
-        button.direction.x = vx;
-        button.direction.y = vy;
-
-        secondButton.direction.x = -vx;
-        secondButton.direction.y = -vy;
-        secondButton.velocity = button.velocity;
-      }; 
+      if(circleCollidesWithCircle(button, secondButton))
+        elasticCollisionBetweenCircles(button, secondButton);
     });
-
   });
 
   teamTwo.players.forEach((button) => button.update());
