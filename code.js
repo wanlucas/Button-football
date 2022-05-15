@@ -88,6 +88,11 @@ class Ball {
     }
 
   collision() {
+    if(circleCollidesWithBorder(
+    {...ball, direction : { x: ball.direction.x } })
+    && Math.abs(canvas.height / 2 - ball.position.y ) <
+    canvas.height / 6) goal();
+
     borderCollision(this);
   }
   
@@ -118,12 +123,15 @@ class Kicker {
 
     this.target.direction.x = -vx;
     this.target.direction.y = -vy;
+
+    console.log('foi')
   }
 }
 
 const teamOne = {
   players: [],
   flank: 1,
+  goals: 0,
   formation: [
     [' ', ' ', ' ', ' '],
     [' ', ' ', ' ', ' '],
@@ -136,6 +144,7 @@ const teamOne = {
 const teamTwo = {
   players: [],
   flank: 2,
+  goals: 0,
   formation: [
     [' ', ' ', ' ', ' '],
     [' ', ' ', ' ', ' '],
@@ -146,6 +155,15 @@ const teamTwo = {
 };
 
 let kicker, ball;
+
+function goal() {
+  ball.position.x > canvas.width / 2 ?
+    teamOne.goals++ : teamTwo.goals++;
+
+  createTeams();
+  ball = new Ball();
+  kicker = new Kicker(teamOne.players[0]);
+}
 
 function circleCollidesWithBorder(circle) {
   const nextMoveX = circle.direction.x * circle.velocity;
@@ -167,7 +185,6 @@ function borderCollision(circle) {
       circle.position.x = canvas.width - circle.radius;
     else circle.position.x = 0 + circle.radius;
 
-    
     circle.direction.x *= -1;
   };
 
@@ -212,6 +229,8 @@ function createTeams() {
   for (const team of [teamOne, teamTwo]) {
     const hrTileSize = (canvas.width / team.formation[0].length) / 2;
     const vrTileSize = canvas.height / team.formation.length;
+
+    team.players = [];
 
     team.formation.forEach((row, y) => {
       row.forEach((col, x) => {
