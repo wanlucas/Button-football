@@ -21,7 +21,7 @@ class Button {
 
     this.velocity = 0;
     this.radius = 25;
-    this.mass = 0.2;
+    this.mass = 0.4;
   }
 
   draw() {
@@ -118,14 +118,19 @@ class Kicker {
   constructor(target) {
     this.target = target;
     this.spacing = 0;
+    this.force = 0;
   }
 
   kick() {
     const vx = controls.mouseX - this.target.position.x;
     const vy = controls.mouseY - this.target.position.y;
+    const total = Math.abs(vx) + Math.abs(vy);
     
-    this.target.direction.x = -vx;
-    this.target.direction.y = -vy;
+    this.target.direction.x = -(vx * 5) / total;
+    this.target.direction.y = -(vy * 5) / total;
+    this.target.velocity = this.force;
+
+    this.force = 0;
   }
   
   draw() {
@@ -146,8 +151,15 @@ class Kicker {
     c.closePath();
   }
 
+  kickPreparation() {
+    if(controls.clicking) {
+      if(this.force < 5) this.force += 0.1;
+    } else if(this.force > 0) this.kick();
+  }
+
   update() {
     this.draw();
+    this.kickPreparation();
     this.spacing < 3 ? this.spacing += 0.05 : this.spacing = 0;
   }
 }
@@ -222,19 +234,20 @@ function circleCollidesWithCircle(circle, secondCircle) {
 function elasticCollisionBetweenCircles(circle1, circle2) {
   const vx = circle1.position.x - circle2.position.x;
   const vy = circle1.position.y - circle2.position.y;
+  const total = Math.abs(vx) + Math.abs(vy);
 
-  circle1.direction.x = vx;
-  circle1.direction.y = vy;
+  circle1.direction.x = (vx * 5) / total;
+  circle1.direction.y = (vy * 5) / total;
 
-  circle2.direction.x = -vx;
-  circle2.direction.y = -vy;
+  circle2.direction.x = -(vx * 5) / total;
+  circle2.direction.y = -(vy * 5) / total;
 
-  if(circle1.velocity > circle2.velocity)
+  if(circle1.velocity > circle2.velocity) { 
     circle2.velocity = circle1.velocity;
-  else circle1.velocity = circle2.velocity;
+  } else circle1.velocity = circle2.velocity;
 
-  circle1.velocity *= (0.7 + (circle2.mass - circle1.mass));
-  circle2.velocity *= (0.7 + (circle1.mass - circle2.mass));
+  circle1.velocity *= Math.min(0.5 + (circle2.mass - circle1.mass), 1);
+  circle2.velocity *= Math.min(0.5 + (circle1.mass - circle2.mass), 1);
 }
 
 function createTeams() {
