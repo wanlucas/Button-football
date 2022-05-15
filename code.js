@@ -37,26 +37,8 @@ class Button {
     c.closePath();
   }
   
-  collision() {
-    if (circleCollidesWithBorder(
-      { ...this, direction: { x: this.direction.x } }
-      )) {
-        if (this.direction.x > 0)
-        this.position.x = canvas.width - this.radius;
-      else this.position.x = 0 + this.radius;
-
-      this.direction.x *= -1;
-    };
-
-    if (circleCollidesWithBorder(
-      { ...this, direction: { y: this.direction.y } }
-      )) {
-      if (this.direction.y > 0)
-        this.position.y = canvas.height - this.radius;
-      else this.position.y = 0 + this.radius;
-
-      this.direction.y *= -1;
-    };
+  collision() { 
+    borderCollision(this);
   }
 
   move() {
@@ -68,6 +50,56 @@ class Button {
     }
   }
 
+  update() {
+    this.draw();
+    this.collision();
+    this.move();
+  }
+}
+
+class Ball {
+  constructor() {
+    this.position = {
+      x: canvas.width / 2,
+      y: canvas.height / 2
+    }
+    
+    this.direction = {
+      x: 0,
+      y: 0
+    }
+
+    this.velocity = 0;
+    this.radius = 13;
+    this.mass = 0.1;
+  }
+
+  draw() {
+    c.beginPath();
+    c.fillStyle = 'black';
+    c.arc(
+      this.position.x,
+      this.position.y,
+      this.radius,
+      0, Math.PI * 2
+      );
+      c.fill();
+      c.closePath();
+    }
+
+  collision() {
+    borderCollision(this);
+  }
+  
+  move() {
+    if (this.velocity > 0) {
+      this.position.x += this.direction.x * this.velocity;
+      this.position.y += this.direction.y * this.velocity;
+      
+      this.velocity -= 0.003;
+    }
+  }
+  
   update() {
     this.draw();
     this.collision();
@@ -113,7 +145,7 @@ const teamTwo = {
   ]
 };
 
-let kicker;
+let kicker, ball;
 
 function circleCollidesWithBorder(circle) {
   const nextMoveX = circle.direction.x * circle.velocity;
@@ -127,6 +159,28 @@ function circleCollidesWithBorder(circle) {
   );
 }
 
+function borderCollision(circle) {
+  if (circleCollidesWithBorder(
+    { ...circle, direction: { x: circle.direction.x } }
+    )) {
+      if (circle.direction.x > 0)
+      circle.position.x = canvas.width - circle.radius;
+    else circle.position.x = 0 + circle.radius;
+
+    circle.direction.x *= -1;
+  };
+
+  if (circleCollidesWithBorder(
+    { ...circle, direction: { y: circle.direction.y } }
+    )) {
+    if (circle.direction.y > 0)
+      circle.position.y = canvas.height - circle.radius;
+    else circle.position.y = 0 + circle.radius;
+
+    circle.direction.y *= -1;
+  };
+}
+
 function circleCollidesWithCircle(circle, secondCircle) {
   const hDistance = circle.position.x - secondCircle.position.x;
   const vDistance = circle.position.y - secondCircle.position.y;
@@ -138,7 +192,7 @@ function circleCollidesWithCircle(circle, secondCircle) {
 function elasticCollisionBetweenCircles(circle1, circle2) {
   const vx = circle1.position.x - circle2.position.x;
   const vy = circle1.position.y - circle2.position.y;
-  
+
   circle1.direction.x = vx;
   circle1.direction.y = vy;
 
@@ -200,6 +254,8 @@ function run() {
   });
 
   teamTwo.players.forEach((button) => button.update());
+
+  ball.update();
 }
 
 function updateCanvasSize() {
@@ -227,6 +283,7 @@ window.addEventListener('load', () => {
   createInputListeners();
   createTeams();
   kicker = new Kicker(teamOne.players[0]);
+  ball = new Ball;
   run();
 });
 
