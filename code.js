@@ -243,9 +243,15 @@ function createNewButton(team, position) {
 function run() {
   requestAnimationFrame(run);
   c.clearRect(0, 0, canvas.width, canvas.height);
+  
+  ball.update();
 
   teamOne.players.forEach((button) => {
     button.update();
+
+    if(circleCollidesWithCircle(button, ball)) {
+      elasticCollisionBetweenCircles(button, ball);
+    }
 
     teamTwo.players.forEach((secondButton) => {
       if(circleCollidesWithCircle(button, secondButton))
@@ -254,8 +260,6 @@ function run() {
   });
 
   teamTwo.players.forEach((button) => button.update());
-
-  ball.update();
 }
 
 function updateCanvasSize() {
