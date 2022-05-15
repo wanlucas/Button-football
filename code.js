@@ -48,6 +48,7 @@ class Button {
 
       this.velocity -= 0.003;
     }
+    else this.velocity = 0;
   }
 
   update() {
@@ -103,6 +104,7 @@ class Ball {
       
       this.velocity -= 0.003;
     }
+    else this.velocity = 0;
   }
   
   update() {
@@ -123,8 +125,24 @@ class Kicker {
 
     this.target.direction.x = -vx;
     this.target.direction.y = -vy;
+  }
 
-    console.log('foi')
+  draw() {
+    if(ball.velocity || this.target.velocity) return;
+
+    c.beginPath();
+    c.setLineDash([5, 5]);
+    c.lineWidth = 2;
+    
+    c.moveTo(controls.mouseX, controls.mouseY);
+    c.lineTo(this.target.position.x, this.target.position.y);
+  
+    c.stroke();
+    c.closePath();
+  }
+
+  update() {
+    this.draw();
   }
 }
 
@@ -265,6 +283,8 @@ function drawField() {
 
   c.beginPath();
 
+  c.lineWidth = 1;
+  c.setLineDash([]);
   c.strokeStyle = 'white';
   c.fillStyle = 'white';
 
@@ -316,6 +336,8 @@ function run() {
 
   drawField();
   
+  kicker.update();
+
   ball.update();
 
   teamOne.players.forEach((button) => {
