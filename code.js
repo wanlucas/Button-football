@@ -19,8 +19,9 @@ class Button {
       y: 0
     }
 
-    this.velocity = 1;
+    this.velocity = 0;
     this.radius = 25;
+    this.mass = 0.2;
   }
 
   draw() {
@@ -106,9 +107,9 @@ const teamTwo = {
   formation: [
     [' ', ' ', ' ', ' '],
     [' ', ' ', ' ', ' '],
-    ['o', ' ', ' ', ' '],
     [' ', ' ', ' ', ' '],
     [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', 'o'],
   ]
 };
 
@@ -138,20 +139,20 @@ function elasticCollisionBetweenCircles(circle1, circle2) {
   const vx = circle1.position.x - circle2.position.x;
   const vy = circle1.position.y - circle2.position.y;
 
+  circle1.mass = 0.3
+
   circle1.direction.x = vx;
   circle1.direction.y = vy;
 
   circle2.direction.x = -vx;
   circle2.direction.y = -vy;
 
-  if(circle1.velocity > circle2.velocity) {
-    circle1.velocity *= 0.9;
+  if(circle1.velocity > circle2.velocity)
     circle2.velocity = circle1.velocity;
-  }
-  else {
-    circle2.velocity *= 0.9;
-    circle1.velocity = circle2.velocity;
-  };
+  else circle1.velocity = circle2.velocity;
+
+  circle1.velocity *= (0.7 + (circle2.mass - circle1.mass));
+  circle2.velocity *= (0.7 + (circle1.mass - circle2.mass));
 }
 
 function createTeams() {
