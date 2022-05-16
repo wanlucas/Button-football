@@ -125,14 +125,24 @@ class Kicker {
     if (ball.velocity || this.target.velocity) return;
 
     c.beginPath();
+    c.strokeStyle = `rgb(
+      ${Math.round((200 * this.force) / 5)},
+      ${Math.round(200 - (200 * this.force) / 5)}, 0
+    )`;
+
     c.moveTo(controls.mouseX, controls.mouseY);
     c.lineTo(this.target.position.x, this.target.position.y);
-    c.setLineDash([2 + this.spacing, 10]);
+
     c.lineWidth = 2;
+    c.setLineDash(
+      [2 + this.spacing,
+      ((6 * this.force) / 5) + 4]
+    );
     c.stroke();
     c.closePath();
 
     c.beginPath();
+
     c.arc(controls.mouseX, controls.mouseY, 5, 0, Math.PI * 2);
     c.setLineDash([]);
     c.fill();
