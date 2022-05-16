@@ -120,18 +120,6 @@ class Kicker {
     this.spacing = 0;
     this.force = 0;
   }
-
-  kick() {
-    const vx = controls.mouseX - this.target.position.x;
-    const vy = controls.mouseY - this.target.position.y;
-    const total = Math.abs(vx) + Math.abs(vy);
-    
-    this.target.direction.x = -(vx * 5) / total;
-    this.target.direction.y = -(vy * 5) / total;
-    this.target.velocity = this.force;
-
-    this.force = 0;
-  }
   
   draw() {
     if(ball.velocity || this.target.velocity) return;
@@ -151,7 +139,21 @@ class Kicker {
     c.closePath();
   }
 
+  kick() {
+    const vx = controls.mouseX - this.target.position.x;
+    const vy = controls.mouseY - this.target.position.y;
+    const total = Math.abs(vx) + Math.abs(vy);
+    
+    this.target.direction.x = -(vx * 5) / total;
+    this.target.direction.y = -(vy * 5) / total;
+    this.target.velocity = this.force;
+
+    this.force = 0;
+  }
+
   kickPreparation() {
+    if(this.target.velocity > 0) return;
+
     if(controls.clicking) {
       if(this.force < 5) this.force += 0.1;
     } else if(this.force > 0) this.kick();
@@ -374,11 +376,7 @@ function updateCanvasSize() {
 }
 
 function createInputListeners() {
-  canvas.addEventListener('mousedown', () => {
-    controls.clicking = true;
-    kicker.target.velocity = 0.4;
-    kicker.kick();
-  });
+  canvas.addEventListener('mousedown', () => controls.clicking = true);
   
   canvas.addEventListener('mouseup', () => controls.clicking = false);
 
