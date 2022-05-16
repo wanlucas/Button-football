@@ -13,7 +13,7 @@ class Button {
       x: position.x,
       y: position.y
     }
-    
+
     this.direction = {
       x: 0,
       y: 0
@@ -36,8 +36,8 @@ class Button {
     c.fill();
     c.closePath();
   }
-  
-  collision() { 
+
+  collision() {
     borderCollision(this);
   }
 
@@ -64,7 +64,7 @@ class Ball {
       x: canvas.width / 2,
       y: canvas.height / 2
     }
-    
+
     this.direction = {
       x: 0,
       y: 0
@@ -83,30 +83,30 @@ class Ball {
       this.position.y,
       this.radius,
       0, Math.PI * 2
-      );
-      c.fill();
-      c.closePath();
-    }
+    );
+    c.fill();
+    c.closePath();
+  }
 
   collision() {
-    if(circleCollidesWithBorder(
-    {...ball, direction : { x: ball.direction.x } })
-    && Math.abs(canvas.height / 2 - ball.position.y ) <
-    canvas.height / 6) goal();
+    if (circleCollidesWithBorder(
+      { ...ball, direction: { x: ball.direction.x } })
+      && Math.abs(canvas.height / 2 - ball.position.y) <
+      canvas.height / 6) goal();
 
     borderCollision(this);
   }
-  
+
   move() {
     if (this.velocity > 0) {
       this.position.x += this.direction.x * this.velocity;
       this.position.y += this.direction.y * this.velocity;
-      
+
       this.velocity -= frictionCalculator(this);
     }
     else this.velocity = 0;
   }
-  
+
   update() {
     this.draw();
     this.collision();
@@ -120,14 +120,14 @@ class Kicker {
     this.spacing = 0;
     this.force = 0;
   }
-  
+
   draw() {
-    if(ball.velocity || this.target.velocity) return;
-    
+    if (ball.velocity || this.target.velocity) return;
+
     c.beginPath();
     c.moveTo(controls.mouseX, controls.mouseY);
     c.lineTo(this.target.position.x, this.target.position.y);
-    c.setLineDash([ 2 + this.spacing, 10]);
+    c.setLineDash([2 + this.spacing, 10]);
     c.lineWidth = 2;
     c.stroke();
     c.closePath();
@@ -139,24 +139,24 @@ class Kicker {
     c.closePath();
   }
 
+  kickPreparation() {
+    if (this.target.velocity || this.target.velocity) return;
+
+    if (controls.clicking) {
+      if (this.force < 5) this.force += 0.1;
+    } else if (this.force > 0) this.kick();
+  }
+
   kick() {
     const vx = controls.mouseX - this.target.position.x;
     const vy = controls.mouseY - this.target.position.y;
     const total = Math.abs(vx) + Math.abs(vy);
-    
+
     this.target.direction.x = -(vx * 5) / total;
     this.target.direction.y = -(vy * 5) / total;
     this.target.velocity = this.force;
 
     this.force = 0;
-  }
-
-  kickPreparation() {
-    if(this.target.velocity > 0) return;
-
-    if(controls.clicking) {
-      if(this.force < 5) this.force += 0.1;
-    } else if(this.force > 0) this.kick();
   }
 
   update() {
@@ -204,7 +204,7 @@ function goal() {
 }
 
 function frictionCalculator(movingObject) {
-  if(movingObject.velocity > 2) return (0.5 * movingObject.mass);
+  if (movingObject.velocity > 2) return (0.5 * movingObject.mass);
   return 0.1 * movingObject.mass;
 }
 
@@ -223,11 +223,11 @@ function circleCollidesWithBorder(circle) {
 function borderCollision(circle) {
   if (circleCollidesWithBorder(
     { ...circle, direction: { x: circle.direction.x } }
-    )) circle.direction.x *= -1;
+  )) circle.direction.x *= -1;
 
   if (circleCollidesWithBorder(
     { ...circle, direction: { y: circle.direction.y } }
-    )) circle.direction.y *= -1;
+  )) circle.direction.y *= -1;
 }
 
 function circleCollidesWithCircle(circle, secondCircle) {
@@ -249,7 +249,7 @@ function elasticCollisionBetweenCircles(circle1, circle2) {
   circle2.direction.x = -(vx * 5) / total;
   circle2.direction.y = -(vy * 5) / total;
 
-  if(circle1.velocity > circle2.velocity) { 
+  if (circle1.velocity > circle2.velocity) {
     circle2.velocity = circle1.velocity;
   } else circle1.velocity = circle2.velocity;
 
@@ -304,18 +304,18 @@ function drawField() {
   c.moveTo(w / 2, 0);
   c.lineTo(w / 2, h);
 
-  c.moveTo(0 , h / 2 - h / 3 );
-  c.lineTo(h / 3 , h / 2 - h / 3 );
-  c.lineTo(h / 3 , h / 2 + h / 3 );
-  c.lineTo(0 , h / 2 + h / 3);
+  c.moveTo(0, h / 2 - h / 3);
+  c.lineTo(h / 3, h / 2 - h / 3);
+  c.lineTo(h / 3, h / 2 + h / 3);
+  c.lineTo(0, h / 2 + h / 3);
 
   c.moveTo(1, h / 2 - h / 6);
   c.lineTo(1, h / 2 + h / 6);
 
-  c.moveTo(w , h / 2 + h / 3 );
-  c.lineTo(w - h / 3 , h / 2 + h / 3 );
-  c.lineTo(w - h / 3 , h / 2 - h / 3 );
-  c.lineTo(w , h/ 2 - h / 3);
+  c.moveTo(w, h / 2 + h / 3);
+  c.lineTo(w - h / 3, h / 2 + h / 3);
+  c.lineTo(w - h / 3, h / 2 - h / 3);
+  c.lineTo(w, h / 2 - h / 3);
 
   c.moveTo(w - 1, h / 2 - h / 6);
   c.lineTo(w - 1, h / 2 + h / 6);
@@ -325,8 +325,8 @@ function drawField() {
 
   c.beginPath();
   c.arc(
-    w / 2 , h / 2 ,
-    (h * 0.8) / 2 , 0 ,
+    w / 2, h / 2,
+    (h * 0.8) / 2, 0,
     Math.PI * 2
   );
   c.stroke();
@@ -335,7 +335,7 @@ function drawField() {
   c.beginPath();
   c.arc(w / 2, h / 2, 4, 0, Math.PI * 2);
   c.fill();
-  c.closePath();     
+  c.closePath();
 }
 
 function run() {
@@ -343,7 +343,7 @@ function run() {
   c.clearRect(0, 0, canvas.width, canvas.height);
 
   drawField();
-  
+
   kicker.update();
 
   ball.update();
@@ -351,12 +351,12 @@ function run() {
   teamOne.players.forEach((button) => {
     button.update();
 
-    if(circleCollidesWithCircle(button, ball)) {
+    if (circleCollidesWithCircle(button, ball)) {
       elasticCollisionBetweenCircles(button, ball);
     };
 
     teamTwo.players.forEach((secondButton) => {
-      if(circleCollidesWithCircle(button, secondButton))
+      if (circleCollidesWithCircle(button, secondButton))
         elasticCollisionBetweenCircles(button, secondButton);
     });
   });
@@ -364,7 +364,7 @@ function run() {
   teamTwo.players.forEach((button) => {
     button.update();
 
-    if(circleCollidesWithCircle(button, ball)) {
+    if (circleCollidesWithCircle(button, ball)) {
       elasticCollisionBetweenCircles(button, ball);
     };
   });
@@ -377,7 +377,7 @@ function updateCanvasSize() {
 
 function createInputListeners() {
   canvas.addEventListener('mousedown', () => controls.clicking = true);
-  
+
   canvas.addEventListener('mouseup', () => controls.clicking = false);
 
   canvas.addEventListener('mousemove', ({ offsetX, offsetY }) => {
