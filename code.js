@@ -351,7 +351,7 @@ function run() {
 
     if(circleCollidesWithCircle(button, ball)) {
       elasticCollisionBetweenCircles(button, ball);
-    }
+    };
 
     teamTwo.players.forEach((secondButton) => {
       if(circleCollidesWithCircle(button, secondButton))
@@ -359,7 +359,13 @@ function run() {
     });
   });
 
-  teamTwo.players.forEach((button) => button.update());
+  teamTwo.players.forEach((button) => {
+    button.update();
+
+    if(circleCollidesWithCircle(button, ball)) {
+      elasticCollisionBetweenCircles(button, ball);
+    };
+  });
 }
 
 function updateCanvasSize() {
