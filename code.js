@@ -4,7 +4,14 @@ const c = canvas.getContext('2d');
 const controls = {
   clicking: false,
   mouseX: 0,
-  mouseY: 0
+  mouseY: 0,
+  selectors: {
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false
+  }
 }
 
 class Button {
@@ -134,10 +141,10 @@ class Kicker {
     c.lineTo(this.target.position.x, this.target.position.y);
 
     c.lineWidth = 2;
-    c.setLineDash(
-      [2 + this.spacing,
-      ((6 * this.force) / 5) + 4]
-    );
+    c.setLineDash([
+      2 + this.spacing,
+      ((6 * this.force) / 5) + 4
+    ]);
     c.stroke();
     c.closePath();
 
@@ -151,7 +158,7 @@ class Kicker {
 
   kickPreparation() {
     if (this.target.velocity || this.target.velocity) return;
-
+    
     if (controls.clicking) {
       if (this.force < 5) this.force += 0.1;
     } else if (this.force > 0) this.kick();
@@ -183,7 +190,7 @@ const teamOne = {
   formation: [
     [' ', ' ', ' ', ' '],
     [' ', ' ', ' ', ' '],
-    [' ', 'o', ' ', ' '],
+    [' ', 'o', 'o', ' '],
     [' ', ' ', ' ', ' '],
     [' ', ' ', ' ', ' '],
   ]
@@ -394,6 +401,9 @@ function createInputListeners() {
     controls.mouseX = offsetX;
     controls.mouseY = offsetY;
   });
+
+  window.addEventListener('keydown', ({ key }) => controls.selectors[key] = true);
+  window.addEventListener('keyup', ({ key }) => controls.selectors[key] = false);
 }
 
 window.addEventListener('load', () => {
