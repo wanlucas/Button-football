@@ -176,9 +176,19 @@ class Kicker {
     this.force = 0;
   }
 
+  updateTarget() {
+    if(this.force || this.target.velocity) return;
+
+    for(const key in controls.selectors) {
+      if(controls.selectors[key] && teamOne.players[key - 1]) 
+        this.target = teamOne.players[key - 1];
+    }
+  }
+
   update() {
     this.draw();
     this.kickPreparation();
+    this.updateTarget();
     this.spacing < 3 ? this.spacing += 0.05 : this.spacing = 0;
   }
 }
