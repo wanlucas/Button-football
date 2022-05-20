@@ -27,7 +27,7 @@ class Button {
 
     this.velocity = 0;
     this.radius = 25;
-    this.mass = 0.4;
+    this.mass = 0.3;
   }
 
   draw() {
