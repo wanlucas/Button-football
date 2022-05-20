@@ -375,25 +375,35 @@ function run() {
 
   ball.update();
 
-  teamOne.players.forEach((button) => {
+  teamOne.players.forEach((button, i) => {
     button.update();
 
     if (circleCollidesWithCircle(button, ball)) {
       elasticCollisionBetweenCircles(button, ball);
     };
 
+    teamOne.players.forEach((secondButton, i2) => {
+      if (i !== i2 && circleCollidesWithCircle(button, secondButton))
+        elasticCollisionBetweenCircles(button, secondButton);
+    });
+    
     teamTwo.players.forEach((secondButton) => {
       if (circleCollidesWithCircle(button, secondButton))
         elasticCollisionBetweenCircles(button, secondButton);
     });
   });
 
-  teamTwo.players.forEach((button) => {
+  teamTwo.players.forEach((button, i) => {
     button.update();
 
     if (circleCollidesWithCircle(button, ball)) {
       elasticCollisionBetweenCircles(button, ball);
     };
+
+    teamTwo.players.forEach((secondButton, i2) => {
+      if (i !== i2 && circleCollidesWithCircle(button, secondButton))
+        elasticCollisionBetweenCircles(button, secondButton);
+    });
   });
 }
 
