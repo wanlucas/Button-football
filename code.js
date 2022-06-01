@@ -10,20 +10,20 @@ const controls = {
     2: false,
     3: false,
     4: false,
-  }
-}
+  },
+};
 
 class Button {
   constructor(position) {
     this.position = {
       x: position.x,
-      y: position.y
-    }
+      y: position.y,
+    },
 
     this.direction = {
       x: 0,
-      y: 0
-    }
+      y: 0,
+    },
 
     this.velocity = 0;
     this.radius = 25;
@@ -34,10 +34,10 @@ class Button {
     c.beginPath();
     c.fillStyle = 'white';
     c.arc(
-      Math.max(Math.min(this.position.x, canvas.width), 0),
-      Math.max(Math.min(this.position.y, canvas.height), 0),
-      this.radius,
-      0, Math.PI * 2
+        Math.max(Math.min(this.position.x, canvas.width), 0),
+        Math.max(Math.min(this.position.y, canvas.height), 0),
+        this.radius,
+        0, Math.PI * 2,
     );
     c.fill();
     c.closePath();
@@ -53,8 +53,7 @@ class Button {
       this.position.y += this.direction.y * this.velocity;
 
       this.velocity -= frictionCalculator(this);
-    }
-    else this.velocity = 0;
+    } else this.velocity = 0;
   }
 
   update() {
@@ -68,13 +67,13 @@ class Ball {
   constructor() {
     this.position = {
       x: canvas.width / 2,
-      y: canvas.height / 2
-    }
+      y: canvas.height / 2,
+    },
 
     this.direction = {
       x: 0,
-      y: 0
-    }
+      y: 0,
+    },
 
     this.velocity = 0;
     this.radius = 13;
@@ -85,10 +84,10 @@ class Ball {
     c.beginPath();
     c.fillStyle = 'black';
     c.arc(
-      this.position.x,
-      this.position.y,
-      this.radius,
-      0, Math.PI * 2
+        this.position.x,
+        this.position.y,
+        this.radius,
+        0, Math.PI * 2,
     );
     c.fill();
     c.closePath();
@@ -96,9 +95,9 @@ class Ball {
 
   collision() {
     if (circleCollidesWithBorder(
-      { ...ball, direction: { x: ball.direction.x } })
-      && Math.abs(canvas.height / 2 - ball.position.y) <
-      canvas.height / 6) goal();
+        {...ball, direction: {x: ball.direction.x}}) &&
+        Math.abs(canvas.height / 2 - ball.position.y) <
+        canvas.height / 6) goal();
 
     borderCollision(this);
   }
@@ -109,8 +108,7 @@ class Ball {
       this.position.y += this.direction.y * this.velocity;
 
       this.velocity -= frictionCalculator(this);
-    }
-    else this.velocity = 0;
+    } else this.velocity = 0;
   }
 
   update() {
@@ -142,7 +140,7 @@ class Kicker {
     c.lineWidth = 2;
     c.setLineDash([
       2 + this.spacing,
-      ((6 * this.force) / 5) + 4
+      ((6 * this.force) / 5) + 4,
     ]);
     c.stroke();
     c.closePath();
@@ -157,7 +155,7 @@ class Kicker {
 
   kickPreparation() {
     if (this.target.velocity || this.target.velocity) return;
-    
+
     if (controls.clicking) {
       if (this.force < 5) this.force += 0.1;
     } else if (this.force > 0) this.kick();
@@ -176,11 +174,12 @@ class Kicker {
   }
 
   updateTarget() {
-    if(this.force || this.target.velocity) return;
+    if (this.force || this.target.velocity) return;
 
-    for(const key in controls.selectors) {
-      if(controls.selectors[key] && teamOne.players[key - 1]) 
+    for (const key in controls.selectors) {
+      if (controls.selectors[key] && teamOne.players[key - 1]) {
         this.target = teamOne.players[key - 1];
+      }
     }
   }
 
@@ -202,7 +201,7 @@ const teamOne = {
     ['o', ' ', 'o', ' '],
     [' ', ' ', 'o', ' '],
     [' ', ' ', ' ', ' '],
-  ]
+  ],
 };
 
 const teamTwo = {
@@ -215,10 +214,11 @@ const teamTwo = {
     [' ', 'o', ' ', 'o'],
     [' ', 'o', ' ', ' '],
     [' ', ' ', ' ', ' '],
-  ]
+  ],
 };
 
-let kicker, ball;
+let kicker;
+let ball;
 
 function goal() {
   ball.position.x > canvas.width / 2 ?
@@ -248,11 +248,11 @@ function circleCollidesWithBorder(circle) {
 
 function borderCollision(circle) {
   if (circleCollidesWithBorder(
-    { ...circle, direction: { x: circle.direction.x } }
+      {...circle, direction: {x: circle.direction.x}},
   )) circle.direction.x *= -1;
 
   if (circleCollidesWithBorder(
-    { ...circle, direction: { y: circle.direction.y } }
+      {...circle, direction: {y: circle.direction.y}},
   )) circle.direction.y *= -1;
 }
 
@@ -292,34 +292,37 @@ function createTeams() {
 
     team.formation.forEach((row, y) => {
       row.forEach((col, x) => {
-        if (col === 'o') createNewButton(
-          team,
-          position = {
-            x: x * hrTileSize + hrTileSize / 2,
-            y: y * vrTileSize + vrTileSize / 2
-          }
-        );
+        if (col === 'o') {
+          createNewButton(
+              team,
+              position = {
+                x: x * hrTileSize + hrTileSize / 2,
+                y: y * vrTileSize + vrTileSize / 2,
+              },
+          );
+        };
       });
     });
   };
 }
 
 function createNewButton(team, position) {
-  if (team.flank === 2)
+  if (team.flank === 2) {
     position.x += canvas.width / 2;
+  }
 
   team.players.push(
-    new Button(
-      position = {
-        x: position.x,
-        y: position.y
-      }
-    )
+      new Button(
+          position = {
+            x: position.x,
+            y: position.y,
+          },
+      ),
   );
 }
 
 function drawField() {
-  const w = canvas.width, h = canvas.height;
+  const w = canvas.width; const h = canvas.height;
 
   c.beginPath();
   c.lineWidth = 1;
@@ -351,9 +354,9 @@ function drawField() {
 
   c.beginPath();
   c.arc(
-    w / 2, h / 2,
-    (h * 0.8) / 2, 0,
-    Math.PI * 2
+      w / 2, h / 2,
+      (h * 0.8) / 2, 0,
+      Math.PI * 2,
   );
   c.stroke();
   c.closePath();
@@ -382,13 +385,15 @@ function run() {
     };
 
     teamOne.players.forEach((secondButton, i2) => {
-      if (i !== i2 && circleCollidesWithCircle(button, secondButton))
+      if (i !== i2 && circleCollidesWithCircle(button, secondButton)) {
         elasticCollisionBetweenCircles(button, secondButton);
+      }
     });
-    
+
     teamTwo.players.forEach((secondButton) => {
-      if (circleCollidesWithCircle(button, secondButton))
+      if (circleCollidesWithCircle(button, secondButton)) {
         elasticCollisionBetweenCircles(button, secondButton);
+      }
     });
   });
 
@@ -400,8 +405,9 @@ function run() {
     };
 
     teamTwo.players.forEach((secondButton, i2) => {
-      if (i !== i2 && circleCollidesWithCircle(button, secondButton))
+      if (i !== i2 && circleCollidesWithCircle(button, secondButton)) {
         elasticCollisionBetweenCircles(button, secondButton);
+      }
     });
   });
 }
@@ -416,13 +422,13 @@ function createInputListeners() {
 
   canvas.addEventListener('mouseup', () => controls.clicking = false);
 
-  canvas.addEventListener('mousemove', ({ offsetX, offsetY }) => {
+  canvas.addEventListener('mousemove', ({offsetX, offsetY}) => {
     controls.mouseX = offsetX;
     controls.mouseY = offsetY;
   });
 
-  window.addEventListener('keydown', ({ key }) => controls.selectors[key] = true);
-  window.addEventListener('keyup', ({ key }) => controls.selectors[key] = false);
+  window.addEventListener('keydown', ({key}) => controls.selectors[key] = true);
+  window.addEventListener('keyup', ({key}) => controls.selectors[key] = false);
 }
 
 window.addEventListener('load', () => {
@@ -435,5 +441,5 @@ window.addEventListener('load', () => {
 });
 
 window.addEventListener('resize', () =>
-  updateCanvasSize()
+  updateCanvasSize(),
 );
